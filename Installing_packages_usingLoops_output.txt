@@ -1,0 +1,29 @@
+  > vi test.yml
+
+  > cat test.yml
+---
+- hosts: host01
+  sudo: yes
+  tasks:
+  - name: Installed package
+    apt: name={{ item }} update_cache=yes state=latest
+    with_items:
+       - apache2
+       - sqlite3
+       - git
+
+  > ansible-playbook -i myhosts test.yml
+
+PLAY [host01] *****************************************************************
+
+GATHERING FACTS ***************************************************************
+ok: [host01]
+
+TASK: [Installed package] *****************************************************
+changed: [host01] => (item=apache2,sqlite3,git)
+
+PLAY RECAP ********************************************************************
+host01                     : ok=2    changed=1    unreachable=0    failed=0
+
+
+  >

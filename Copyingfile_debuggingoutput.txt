@@ -1,0 +1,35 @@
+  > ansible-playbook -i myhosts test.yml
+
+PLAY [Copying a file to remote hosts] *****************************************
+
+GATHERING FACTS ***************************************************************
+ok: [host01]
+
+TASK: [Copying file as afile_copy.txt] ****************************************
+changed: [host01]
+
+TASK: [debug ] ****************************************************************
+ok: [host01] => {
+    "var": {
+        "results": {
+            "changed": true,
+            "checksum": "da39a3ee5e6b4b0d3255bfef95601890afd80709",            "dest": "/home/ubuntu/afile_copy.txt",
+            "gid": 1000,
+            "group": "ubuntu",
+            "invocation": {
+                "module_args": "src=/home/scrapbook/tutorial/afile.txt dest=/home/ubunt
+u/afile_copy.txt",
+                "module_complex_args": {},
+                "module_name": "copy"
+            },
+            "md5sum": "d41d8cd98f00b204e9800998ecf8427e",
+            "mode": "0664",
+            "owner": "ubuntu",
+            "size": 0,
+            "src": "/home/ubuntu/.ansible/tmp/ansible-tmp-1518276481.94-60273395665966/source",
+            "state": "file",
+            "uid": 1000
+        }
+    }
+}
+

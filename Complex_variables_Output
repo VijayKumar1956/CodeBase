@@ -1,0 +1,47 @@
+ > ansible-playbook -i myhosts test.yml
+
+PLAY [Complex Variables] ******************************************************
+
+GATHERING FACTS ***************************************************************
+ok: [host01]
+
+TASK: [debug var=ansible_eth0] ************************************************
+ok: [host01] => {
+    "var": {
+        "ansible_eth0": {
+            "active": true,
+            "device": "eth0",
+            "ipv4": {
+                "address": "172.17.0.69",
+                "netmask": "255.255.0.0",
+                "network": "172.17.0.0"
+            },
+            "ipv6": [
+                {
+                    "address": "fe80::42:acff:fe11:45",
+                    "prefix": "64",
+                    "scope": "link"
+                }
+            ],
+            "macaddress": "02:42:ac:11:00:45",
+            "mtu": 1500,
+            "promisc": false,
+            "type": "ether"
+        }
+    }
+}
+
+TASK: [debug msg="{{ ansible_eth0.ipv4.address }}"] ***************************
+ok: [host01] => {
+    "msg": "172.17.0.69"
+}
+
+TASK: [debug msg="{{ ansible_eth0['ipv4'] ['address'] }}"] ********************
+ok: [host01] => {
+    "msg": "172.17.0.69"
+}
+
+PLAY RECAP ********************************************************************
+host01                     : ok=4    changed=0    unreachable=0    failed=0
+
+

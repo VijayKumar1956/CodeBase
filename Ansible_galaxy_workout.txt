@@ -1,0 +1,137 @@
+Your Interactive Learning Environment Bash Terminal
+
+
+  > ansible-galaxy init sample_role- sample_role was created successfully
+
+  > ls
+ansible.cfg  myhosts  output.txt  sample_role
+
+  > ls -Rl sample_role/
+sample_role/:
+total 32
+-rw-r--r-- 1 scrapbook scrapbook 1328 Feb 12 15:32 README.md
+drwxr-xr-x 2 scrapbook scrapbook 4096 Feb 12 15:32 defaults
+drwxr-xr-x 2 scrapbook scrapbook 4096 Feb 12 15:32 files
+drwxr-xr-x 2 scrapbook scrapbook 4096 Feb 12 15:32 handlers
+drwxr-xr-x 2 scrapbook scrapbook 4096 Feb 12 15:32 meta
+drwxr-xr-x 2 scrapbook scrapbook 4096 Feb 12 15:32 tasks
+drwxr-xr-x 2 scrapbook scrapbook 4096 Feb 12 15:32 templates
+drwxr-xr-x 2 scrapbook scrapbook 4096 Feb 12 15:32 vars
+
+sample_role/defaults:
+total 4
+-rw-r--r-- 1 scrapbook scrapbook 36 Feb 12 15:32 main.yml
+
+sample_role/files:
+total 0
+
+sample_role/handlers:
+total 4
+
+  > ansible-galaxy install geerlingguy.apache
+- downloading role 'apache', owned by geerlingguy
+- downloading role from https://github.com/geerlingguy/ansible-role-apache/archive/2.1.
+1.tar.gz
+- extracting geerlingguy.apache to /home/scrapbook/tutorial/geerlingguy.apache
+- geerlingguy.apache was installed successfully
+
+  > cd
+ansible.cfg         myhosts             sample_role/
+geerlingguy.apache/ output.txt
+
+  > cd geerlingguy.apache/
+.gitignore   LICENSE      defaults/    meta/        templates/   vars/
+.travis.yml  README.md    handlers/    tasks/       tests/
+
+  > cd geerlingguy.apache/
+.gitignore   LICENSE      defaults/    meta/        templates/   vars/
+.travis.yml  README.md    handlers/    tasks/       tests/
+
+  > cd geerlingguy.apache/t
+tasks/     templates/ tests/
+
+  > cd geerlingguy.apache/tasks/
+
+  > cat main.yml
+---
+# Include variables and define needed variables.
+- name: Include OS-specific variables.
+  include_vars: "{{ ansible_os_family }}.yml"
+
+- name: Include variables for Amazon Linux.
+  include_vars: "AmazonLinux.yml"
+  when: ansible_distribution == "Amazon" and ansible_distribution_major_version == "NA"
+
+- name: Define apache_packages.
+  set_fact:
+    apache_packages: "{{ __apache_packages | list }}"
+  when: apache_packages is not defined
+
+# Setup/install tasks.
+- include: "setup-{{ ansible_os_family }}.yml"
+  static: no
+
+# Figure out what version of Apache is installed.
+- name: Get installed version of Apache.
+  shell: "{{ apache_daemon_path }}{{ apache_daemon }} -v"
+  changed_when: false
+  check_mode: no
+  register: _apache_version
+
+- name: Create apache_version variable.
+  set_fact:
+    apache_version: "{{ _apache_version.stdout.split()[2].split('/')[1] }}"
+
+- include_vars: apache-22.yml
+  when: "apache_version.split('.')[1] == '2'"
+
+- include_vars: apache-24.yml
+  when: "apache_version.split('.')[1] == '4'"
+
+# Configure Apache.
+- include: "configure-{{ ansible_os_family }}.yml"
+  static: no
+
+- name: Ensure Apache has selected state and enabled on boot.
+  service:
+    name: "{{ apache_service }}"
+    state: "{{ apache_state }}"
+    enabled: yes
+
+  > cd
+
+  > pwd
+/home/scrapbook
+
+  > cd tutorial/
+
+  > ls -lrth
+total 16K
+-rw-r--r-- 1 scrapbook scrapbook   40 Feb 12 15:30 myhosts
+-rw-r--r-- 1 scrapbook scrapbook  151 Feb 12 15:30 ansible.cfg
+-rw-r--r-- 1 scrapbook scrapbook    0 Feb 12 15:32 output.txt
+drwxr-xr-x 9 scrapbook scrapbook 4.0K Feb 12 15:32 sample_role
+drwxr-xr-x 9 scrapbook scrapbook 4.0K Feb 12 15:43 geerlingguy.apache
+
+  > ansible-galaxy init geerlingguy.apache --force
+- geerlingguy.apache was created successfully
+
+  > cat geerlingguy.apache/tasks/main.yml
+---
+# tasks file for geerlingguy.apache
+
+  > ansible-galaxy list
+- sample_role, (unknown version)
+- geerlingguy.apache, 2.1.1
+
+  > ansible-galaxy remove geerlingguy.apache
+- successfully removed geerlingguy.apache
+
+  > ls -lrth
+total 12K
+-rw-r--r-- 1 scrapbook scrapbook   40 Feb 12 15:30 myhosts
+-rw-r--r-- 1 scrapbook scrapbook  151 Feb 12 15:30 ansible.cfg
+-rw-r--r-- 1 scrapbook scrapbook    0 Feb 12 15:32 output.txt
+drwxr-xr-x 9 scrapbook scrapbook 4.0K Feb 12 15:32 sample_role
+
+  >

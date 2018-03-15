@@ -1,0 +1,109 @@
+  > cat tag.yml
+---
+- name: Special Tags
+  hosts: all
+  sudo: yes
+  tasks:
+    - name: location 1
+      debug: msg="california"
+
+    - name: location 2
+      debug: msg="mumbai"
+      tags:
+        - tag1
+
+    - name: location 3
+      debug: msg="bangalore"
+      tags:
+        - tag2
+
+    - name: location 4
+      debug: msg="chennai"
+      tags:
+        - always
+
+  > ansible-playbook -i myhosts tag.yml --tags "tag1"
+
+PLAY [Special Tags] ***********************************************************
+
+GATHERING FACTS ***************************************************************
+ok: [host01]
+
+TASK: [location 2] ************************************************************
+ok: [host01] => {
+    "msg": "mumbai"
+}
+
+TASK: [location 4] ************************************************************
+ok: [host01] => {
+    "msg": "chennai"
+}
+
+PLAY RECAP ********************************************************************
+host01                     : ok=3    changed=0    unreachable=0    failed=0
+
+
+  > ansible-playbook -i myhosts tag.yml --tags "tagged"
+
+PLAY [Special Tags] ***********************************************************
+
+GATHERING FACTS ***************************************************************
+ok: [host01]
+
+TASK: [location 2] ************************************************************
+ok: [host01] => {
+    "msg": "mumbai"
+}
+
+TASK: [location 3] ************************************************************
+ok: [host01] => {
+    "msg": "bangalore"
+}
+
+TASK: [location 4] ************************************************************
+ok: [host01] => {
+    "msg": "chennai"
+}
+
+PLAY RECAP ********************************************************************
+host01                     : ok=4    changed=0    unreachable=0    failed=0
+
+
+  > ansible-playbook -i myhosts tag.yml --tags "untagged"
+
+PLAY [Special Tags] ***********************************************************
+
+GATHERING FACTS ***************************************************************
+ok: [host01]
+
+TASK: [location 1] ************************************************************
+ok: [host01] => {
+    "msg": "california"
+}
+
+TASK: [location 4] ************************************************************
+ok: [host01] => {
+    "msg": "chennai"
+}
+
+PLAY RECAP ********************************************************************
+host01                     : ok=3    changed=0    unreachable=0    failed=0
+
+
+s "always"e-playbook -i myhosts tag.yml --tags "untagged" --skip-tag
+
+PLAY [Special Tags] ***********************************************************
+
+GATHERING FACTS ***************************************************************
+ok: [host01]
+
+TASK: [location 1] ************************************************************
+ok: [host01] => {
+    "msg": "california"
+}
+
+PLAY RECAP ********************************************************************
+host01                     : ok=2    changed=0    unreachable=0    failed=0
+
+
+  >
