@@ -1,4 +1,6 @@
- > ansible-playbook -i myhosts test.yml
+#changes made for git practice
+
+> ansible-playbook -i myhosts test.yml
 
 PLAY [Complex Variables] ******************************************************
 
