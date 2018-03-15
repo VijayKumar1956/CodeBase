@@ -1,4 +1,5 @@
-  > ansible-playbook -i myhosts test.yml
+#Changes made for git practice
+> ansible-playbook -i myhosts test.yml
 
 PLAY [Copying a file to remote hosts] *****************************************
 
